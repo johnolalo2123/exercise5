@@ -1,0 +1,53 @@
+const form = document.getElementById('myForm');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const message = document.getElementById('message').value;
+
+  if (name.length < 2) {
+    alert('Name must be at least 2 characters');
+    return;
+  }
+  if (!validateEmail(email)) {
+    alert('Invalid email format');
+    return;
+  }
+  if (!validatePhone(phone)) {
+    alert('Invalid phone number format');
+    return;
+  }
+  if (message.length < 10) {
+    alert('Message must be at least 10 characters');
+    return;
+  }
+
+  // Ajax submission
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'process.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.send(`name=${name}&email=${email}&phone=${phone}&message=${message}`);
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      alert('Form submitted successfully!');
+    } else {
+      alert('Error submitting form');
+    }
+  };
+});
+
+
+function validateEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+}
+
+
+function validatePhone(phone) {
+  const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+  return phoneRegex.test(phone);
+}
